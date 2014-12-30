@@ -3,7 +3,6 @@ package gjacobs.com.websockettest.model.data;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.orm.SugarRecord;
 
 /**
  * Created by brettjacobs on 12/26/14.

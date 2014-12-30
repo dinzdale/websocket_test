@@ -2,8 +2,6 @@ package gjacobs.com.websockettest.model.data;
 
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
 
 
 public class PhotosDAO extends Model {

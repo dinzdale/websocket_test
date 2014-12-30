@@ -3,16 +3,12 @@ package gjacobs.com.websockettest.model.data;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
 
 /**
  * Created by brettjacobs on 12/26/14.
  */
 @Table(name = "users")
 public class UsersDAO extends Model implements CRUD {
-    //    @Ignore
-//    int id;
     @Column(name = "name")
     String name;
     @Column(name = "username")
