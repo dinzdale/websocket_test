@@ -47,13 +47,16 @@ public class UserFragment extends Fragment {
         prevUserButton = (Button) fragmentContainer.findViewById(R.id.prev_user_button);
         nextUserButton = (Button) fragmentContainer.findViewById(R.id.next_user_button);
         nameTextView = (TextView) fragmentContainer.findViewById(R.id.name_edittext);
+        nameTextView.setOnFocusChangeListener(focusChangeListener);
         userNameTextView = (TextView) fragmentContainer.findViewById(R.id.username_edittext);
+        userNameTextView.setOnFocusChangeListener(focusChangeListener);
         emailTextView = (TextView) fragmentContainer.findViewById(R.id.email_edittext);
         addressTextView = (TextView) fragmentContainer.findViewById(R.id.address_edittext);
         phoneTextView = (TextView) fragmentContainer.findViewById(R.id.phone_edittext);
         websiteTextView = (TextView) fragmentContainer.findViewById(R.id.website_edittext);
         noUsersTextView = (TextView) fragmentContainer.findViewById(R.id.number_users);
         streetTextView = (TextView) fragmentContainer.findViewById(R.id.street_edittext);
+        streetTextView.setOnFocusChangeListener(focusChangeListener);
         suiteTextView = (TextView) fragmentContainer.findViewById(R.id.suite_edittext);
         cityTextView = (TextView) fragmentContainer.findViewById(R.id.city_edittext);
         zipCodeTextView = (TextView) fragmentContainer.findViewById(R.id.zipcode_edittext);
@@ -61,8 +64,40 @@ public class UserFragment extends Fragment {
         return fragmentContainer;
     }
 
+    private View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+
+            if (!hasFocus) {
+                List<UsersDAO> usersDAOs = new Select().from(UsersDAO.class).where("id=?", userIDs.get(currentUser)).execute();
+                UsersDAO usersDAO = usersDAOs.get(0);
+                String newValue = ((TextView) v).getText().toString();
+                switch (v.getId()) {
+                    case R.id.name_edittext:
+                        if (newValue.compareTo(usersDAO.getName()) != 0) {
+                            usersDAO.setName(newValue);
+                            usersDAO.doSave();
+                        }
+                        break;
+                    case R.id.username_edittext:
+                        if (newValue.compareTo(usersDAO.getUsername()) != 0) {
+                            usersDAO.setUsername(newValue);
+                            usersDAO.doSave();
+                        }
+                        break;
+                    case R.id.street_edittext:
+                        if (newValue.compareTo(usersDAO.getAddress().getStreet())!=0) {
+                            usersDAO.getAddress().setStreet(newValue);
+                            usersDAO.doSave();
+                        }
+                        break;
+                }
+            }
+        }
+    };
+
     private void updateUI() {
-        List<UsersDAO> usersDAOs = new Select().from(UsersDAO.class).where("id=?", userIDs.get(currentUser - 1)).execute();
+        List<UsersDAO> usersDAOs = new Select().from(UsersDAO.class).where("id=?", userIDs.get(currentUser)).execute();
         if (!usersDAOs.isEmpty()) {
             progressOverlay.setVisibility(View.GONE);
             UsersDAO userDAO = usersDAOs.get(0);
@@ -86,7 +121,7 @@ public class UserFragment extends Fragment {
         prevUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentUser > 1) {
+                if (currentUser > 0) {
                     currentUser--;
                     updateUI();
                 }
@@ -95,7 +130,7 @@ public class UserFragment extends Fragment {
         nextUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentUser < userCount) {
+                if (currentUser < userCount - 1) {
                     currentUser++;
                     updateUI();
                 }
@@ -121,7 +156,7 @@ public class UserFragment extends Fragment {
     public void onUserDBInit(UserDBInit event) {
         userCount = event.getNoUsers();
         if (userCount > 0) {
-            currentUser = 1;
+            currentUser = 0;
             // set IDs
             List<UsersDAO> usersDAOs = new Select("id").from(UsersDAO.class).execute();
             userIDs = new ArrayList<>(usersDAOs.size());
