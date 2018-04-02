@@ -1,9 +1,8 @@
 package gjacobs.com.websockettest;
 
-import android.os.PersistableBundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,17 +10,17 @@ import android.view.View;
 import gjacobs.com.websockettest.model.data.TestDataService;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DataFetcher.startActionFetchData(getApplicationContext());
+        //DataFetcher.startActionFetchData(getApplicationContext());
         setContentView(R.layout.activity_main);
         View fragmentContainer = findViewById(R.id.container1);
         FragmentManager fm = getSupportFragmentManager();
-        //fm.beginTransaction().replace(R.id.container1, new EchoFragment()).commit();
-        fm.beginTransaction().replace(R.id.container1, new UserFragment()).commit();
+        fm.beginTransaction().replace(R.id.container1, new EchoFragment()).commit();
+        //fm.beginTransaction().replace(R.id.container1, new UserFragment()).commit();
     }
 
 
